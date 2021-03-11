@@ -34,6 +34,7 @@ int main() {
 }
 
 void mergeSort(int *v, int e, int d) {
+    printf("primeira posicao: %d, ultima posicao: %d\n", e, d);
     int meio;
 
     if (e < d) {

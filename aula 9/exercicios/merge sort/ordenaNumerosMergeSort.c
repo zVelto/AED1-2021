@@ -27,8 +27,6 @@ int main() {
 
 void mergeSort(int *v, int primeiraPosicao, int ultimaPosicao) {
 
-    printf("primeira posicao: %d, ultima posicao: %d\n", primeiraPosicao, ultimaPosicao);
-
     if (primeiraPosicao < ultimaPosicao) {
 
         int posicaoMeio = (ultimaPosicao + primeiraPosicao) / 2;
@@ -41,11 +39,11 @@ void mergeSort(int *v, int primeiraPosicao, int ultimaPosicao) {
 
 void intercala(int *v, int primeiraPosicao, int posicaoMeio, int ultimaPosicao) {
     
-    int tamanho = (ultimaPosicao - primeiraPosicao) + 1;
+    int tamanho = ultimaPosicao - primeiraPosicao + 1;
 
     int *vTemp = (int*)malloc(sizeof(int) * tamanho);
 
-    int iTemp = 0, posicaoV1 = 0, posicaoV2 = posicaoMeio + 1;
+    int iTemp = 0, posicaoV1 = primeiraPosicao, posicaoV2 = posicaoMeio + 1;
 
     while(posicaoV1 <= posicaoMeio && posicaoV2 <= ultimaPosicao) {
         if(v[posicaoV1] < v[posicaoV2]) {
@@ -65,14 +63,13 @@ void intercala(int *v, int primeiraPosicao, int posicaoMeio, int ultimaPosicao) 
         iTemp++;
     }
     
-    while (posicaoV2 <= posicaoMeio) {
+    while (posicaoV2 <= ultimaPosicao) {
         vTemp[iTemp] = v[posicaoV2];
         posicaoV2++;
         iTemp++;
     }
 
-    for (int i = 0; i < tamanho; i++) {
-        v[i] = vTemp[i];
+    for (int i = primeiraPosicao, j = 0; i <= ultimaPosicao; i++, j++) {
+        v[i] = vTemp[j];
     }
-
 }
