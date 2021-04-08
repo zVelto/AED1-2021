@@ -46,7 +46,7 @@ int particiona(int *v, int primeiraPosicao, int ultimaPosicao, int n) {
 
     for(posicaoAtual, posicaoMenor; posicaoAtual < ultimaPosicao; posicaoAtual++){
 
-        if(v[posicaoAtual] < v[ultimaPosicao]) {
+        if(v[posicaoAtual] <= v[ultimaPosicao]) {
             posicaoMenor++;
             int aux = v[posicaoMenor];
             v[posicaoMenor] = v[posicaoAtual];

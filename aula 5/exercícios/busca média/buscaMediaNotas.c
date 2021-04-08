@@ -35,7 +35,7 @@ int main() {
     scanf("%d", &media);
 
     for (int i = 0; i < N; i++) {
-        if (MediaAluno(turma[i].notas, turma[i].qtNotas) == media){
+        if (MediaAluno(turma[i].notas, turma[i].qtNotas) >= media){
 
             printf("[%s] %s\n", turma[i].matricula, turma[i].nome);
         }
