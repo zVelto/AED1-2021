@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct Item {
     int chave;
@@ -42,44 +43,57 @@ struct Estrutura criaCIRCULAR(int);
 
 int main() {
 
-    struct FilaEstaticaCircular fila;
     int n;
 
     scanf("%d", &n);
 
-    struct Estrutura *v = (struct Estrutura *)malloc(sizeof(struct Estrutura) * n);
-
-    char estrutura[9];
+    char *estrutura;
     int tamanho;
 
     for(int i = 0; i < n; i++) {
-        scanf("\n%c", estrutura);
 
-        if(estrutura[0] == 'L') {
-            //printf("LES cuzinho\n");
-            scanf("%d", &tamanho);
-            v[i] = criaLES(tamanho);
+        scanf("\n%s", estrutura);
 
-        } else if(estrutura[0] == 'F') {
-            //printf("FILA cuzinho\n");
-            scanf("%d", &tamanho);
-            v[i] = criaFILA(tamanho);
+        //printf("%d\n", strcmp(estrutura, "LES"));
 
-        } else if(estrutura[0] == 'P') {
-            //printf("PILHA cuzinho\n");
+        if(strcmp(estrutura, "LES") == 0) {
             scanf("%d", &tamanho);
-            v[i] = criaPILHA(tamanho);
+            /*
+            printf("%s\n", estrutura);
+            printf("%d\n", tamanho);
+            */
+           struct Estrutura c = criaLES(tamanho);
+           printf("\n");
+
+        } else if(estrutura == "FILA") {
+            scanf("%d", &tamanho);
+            /*
+            printf("%s\n", estrutura);
+            printf("%d\n", tamanho);
+            */
+
+        } else if(estrutura == "PILHA") {
+            scanf("%d", &tamanho);
+            /*
+            printf("%s\n", estrutura);
+            printf("%d\n", tamanho);
+            */
 
         } else {
-            //printf("CIRCULAR cuzinho\n");
             scanf("%d", &tamanho);
-            v[i] = criaCIRCULAR(tamanho);
+            /*
+            printf("%s\n", estrutura);
+            printf("%d\n", tamanho);
+            */
 
         }
+
+        free(estrutura);
     }
 
     return 0;
 }
+
 
 struct Estrutura criaLES(int n) {
     
@@ -93,7 +107,7 @@ struct Estrutura criaLES(int n) {
     LES.les->tamanho = n;
     LES.les->itens = (struct Item*) malloc(n * sizeof(struct Item));
 
-    printf("%d\n", LES.les->tamanho);
+    //printf("%d\n", LES.les->tamanho);
 
     return LES;
 }
