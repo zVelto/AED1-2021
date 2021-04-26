@@ -4,7 +4,7 @@
 
 struct No {
     int chave;
-    char *palavra;
+    char palavra[55];
     struct No *pai;
     struct No *direita;
     struct No *esquerda;
@@ -78,26 +78,20 @@ struct No * criaNo(char *p) {
     struct No * no = (struct No*) malloc(sizeof(struct No));
 
     if(no != NULL) {
-        no->palavra = p;
+        for(int i = 0; i <= strlen(p); i++) {
+            no->palavra[i] = p[i];
+        }
         no->esquerda = NULL;
         no->direita = NULL;
         no->pai = NULL;
         no->chave = converteChar(p);
     }
 
-    //printf("(%s)\n", no->palavra);
-
     return no;
 }
 
 void inserir(struct Arvore *t, struct No *novo) {
     struct No *pai = NULL, *filho = t->raiz;
-
-    // if(t->raiz != NULL) {
-    //     printf("(%s)\n", t->raiz->palavra);
-    //     printf("(%d)\n", t->raiz->chave);
-    //     printf("\n");
-    // }
 
     while(filho != NULL) {
 
@@ -111,18 +105,11 @@ void inserir(struct Arvore *t, struct No *novo) {
             filho = filho->esquerda;
         }
 
-        // if(t->raiz != NULL) {
-        //     printf("(%s)\n", t->raiz->palavra);
-        //     printf("(%d)\n", t->raiz->chave);
-        //     printf("\n");
-        // }
     }
 
     if(pai != NULL) { // inserindo no folha
 
         novo->pai = pai;
-        //printf("(%s)\n", novo->pai->palavra);
-        //printf("(%s)\n", novo->palavra);
 
         if(pai->chave > novo->chave) {// filho da esquerda
             pai->esquerda = novo;
@@ -131,26 +118,16 @@ void inserir(struct Arvore *t, struct No *novo) {
             pai->direita = novo;
         }
 
-        // if(t->raiz != NULL) {
-        //     printf("(%s)\n", t->raiz->palavra);
-        //     printf("(%d)\n", t->raiz->chave);
-        //     printf("\n");
-        // }
     }
     else { // inserindo no raiz
         t->raiz = novo;
-        // if(t->raiz != NULL) {
-        //     printf("(%s)\n", t->raiz->palavra);
-        //     printf("(%d)\n", t->raiz->chave);
-        //     printf("\n");
-        // }
     }
 }
 
 void preOrder(struct No *r) {
 
     if(r != NULL) {
-        printf("[%d]:[%s]\n", r->chave, r->palavra);
+        printf("[%d]:%s\n", r->chave, r->palavra);
         preOrder(r->esquerda);
         preOrder(r->direita);
     }
@@ -161,7 +138,7 @@ void postOrder(struct No *r) {
     if(r != NULL) {
         postOrder(r->esquerda);
         postOrder(r->direita);
-        printf("[%d]:[%s]\n", r->chave, r->palavra);
+        printf("[%d]:%s\n", r->chave, r->palavra);
     }
 }
 
@@ -169,7 +146,7 @@ void inOrder(struct No *r) {
 
     if(r != NULL) {
         inOrder(r->esquerda);
-        printf("[%d]:[%s]\n", r->chave, r->palavra);
+        printf("[%d]:%s\n", r->chave, r->palavra);
         inOrder(r->direita);
     }
 }
