@@ -4,7 +4,6 @@
 
 struct No {
     int chave;
-    char *palavra;
     struct No *pai;
     struct No *direita;
     struct No *esquerda;
@@ -15,53 +14,38 @@ struct Arvore {
 };
 
 struct Arvore * criaArvore();
-struct No * criaNo(char *);
+struct No * criaNo(int);
 void inserir(struct Arvore *, struct No *);
 void preOrder(struct No *);
 void inOrder(struct No *);
 void postOrder(struct No *);
-struct No * remover(struct Arvore *, char *);
+struct No * remover(struct Arvore *, int);
 struct No * sucessor(struct No *);
-int converteChar(char *);
+struct No * antecessor(struct No *);
 
 int main() {
+
     struct Arvore *arvore = criaArvore();
-    struct No *no;
-    char palavra[55]; 
-    int ret;
-    char op[55];
+    int n, m;
 
-    while(scanf("\n%s", op) != EOF) {
+    scanf("%d", &n);
 
-        if(strcmp(op, "insert") == 0) {
-            ret = scanf("%s", &palavra);
-            struct No *no = criaNo(palavra);
-            inserir(arvore, no);
-        }
-
-        else if(strcmp(op,"delete") == 0) {
-
-            ret = scanf("%s", &palavra);
-            no = remover(arvore, palavra);
-
-            if(no != NULL) {
-                free(no);
-            }
-        }
-        else if(strcmp(op,"pre-order") == 0) {
-            preOrder(arvore->raiz);
-            printf("\n");
-        }
-
-        else if(strcmp(op,"in-order") == 0) {
-            inOrder(arvore->raiz);
-            printf("\n");
-        }
-        else { // T
-            postOrder(arvore->raiz);
-            printf("\n");
-        }
+    for(int i = 0; i < n; i++) {
+        int num;
+        scanf("%d", &num);
+        inserir(arvore, criaNo(num));
     }
+
+    scanf("%d", &m);
+
+    for(int i = 0; i < m; i++) {
+        int num;
+        scanf("%d", &num);
+        remover(arvore, num);
+    }
+
+    preOrder(arvore->raiz);
+
     return 0;
 }
 
@@ -74,35 +58,31 @@ struct Arvore * criaArvore() {
     return t;
 }
 
-struct No * criaNo(char *p) {
+struct No * criaNo(int chave) {
     struct No * no = (struct No*) malloc(sizeof(struct No));
 
     if(no != NULL) {
-        no->palavra = p;
+        no->chave = chave;
         no->esquerda = NULL;
         no->direita = NULL;
         no->pai = NULL;
-        no->chave = converteChar(p);
     }
-
-    //printf("(%s)\n", no->palavra);
-
     return no;
 }
 
 void inserir(struct Arvore *t, struct No *novo) {
     struct No *pai = NULL, *filho = t->raiz;
 
-    // if(t->raiz != NULL) {
-    //     printf("(%s)\n", t->raiz->palavra);
-    //     printf("(%d)\n", t->raiz->chave);
-    //     printf("\n");
-    // }
+    int achei = 0;
 
     while(filho != NULL) {
 
         pai = filho;
-        
+
+        if(filho->chave == novo->chave) {
+            achei = 1;
+        }
+
         if(filho->chave < novo->chave) {
             filho = filho->direita;
         }
@@ -110,47 +90,29 @@ void inserir(struct Arvore *t, struct No *novo) {
         else {
             filho = filho->esquerda;
         }
-
-        // if(t->raiz != NULL) {
-        //     printf("(%s)\n", t->raiz->palavra);
-        //     printf("(%d)\n", t->raiz->chave);
-        //     printf("\n");
-        // }
     }
 
-    if(pai != NULL) { // inserindo no folha
+    if(achei == 0) {
+        if(pai != NULL) { // inserindo no folha
+            novo->pai = pai;
 
-        novo->pai = pai;
-        //printf("(%s)\n", novo->pai->palavra);
-        //printf("(%s)\n", novo->palavra);
-
-        if(pai->chave > novo->chave) {// filho da esquerda
-            pai->esquerda = novo;
+            if(pai->chave > novo->chave) {// filho da esquerda
+                pai->esquerda = novo;
+            }
+            else { // filho da direita
+                pai->direita = novo;
+            }
         }
-        else { // filho da direita
-            pai->direita = novo;
+        else { // inserindo no raiz
+            t->raiz = novo;
         }
-
-        // if(t->raiz != NULL) {
-        //     printf("(%s)\n", t->raiz->palavra);
-        //     printf("(%d)\n", t->raiz->chave);
-        //     printf("\n");
-        // }
-    }
-    else { // inserindo no raiz
-        t->raiz = novo;
-        // if(t->raiz != NULL) {
-        //     printf("(%s)\n", t->raiz->palavra);
-        //     printf("(%d)\n", t->raiz->chave);
-        //     printf("\n");
-        // }
     }
 }
 
 void preOrder(struct No *r) {
 
     if(r != NULL) {
-        printf("[%d]:[%s]\n", r->chave, r->palavra);
+        printf("%d\n", r->chave);
         preOrder(r->esquerda);
         preOrder(r->direita);
     }
@@ -161,7 +123,7 @@ void postOrder(struct No *r) {
     if(r != NULL) {
         postOrder(r->esquerda);
         postOrder(r->direita);
-        printf("[%d]:[%s]\n", r->chave, r->palavra);
+        printf("%d ", r->chave);
     }
 }
 
@@ -169,15 +131,13 @@ void inOrder(struct No *r) {
 
     if(r != NULL) {
         inOrder(r->esquerda);
-        printf("[%d]:[%s]\n", r->chave, r->palavra);
+        printf("%d ", r->chave);
         inOrder(r->direita);
     }
 }
 
-struct No * remover(struct Arvore *t, char *palavra) {
+struct No * remover(struct Arvore *t, int chave) {
     struct No *anterior = NULL, *filho = t->raiz, *subs;
-
-    int chave = converteChar(palavra);
 
     while(filho != NULL && filho->chave != chave) {
         anterior = filho;
@@ -212,7 +172,7 @@ struct No * remover(struct Arvore *t, char *palavra) {
         }
         else if(filho->esquerda != NULL && filho->direita != NULL) // eh pai de dois filhos
         {
-            subs = sucessor(filho->direita);
+            subs = antecessor(filho->esquerda);
 
             if(anterior != NULL) // nao eh raiz
             {
@@ -316,13 +276,27 @@ struct No * sucessor(struct No *filho)
     return anterior;
 }
 
-int converteChar(char *palavra) {
+struct No * antecessor(struct No *filho)
+{
+    struct No * anterior = NULL;
 
-    int num = 0;
-
-    for(int i = 0; i < strlen(palavra); i++) {
-        num = num + (int)palavra[i];
+    while(filho != NULL)
+    {
+        anterior = filho;
+        filho = filho->direita;
     }
 
-    return num;
+    if(anterior->pai->esquerda == anterior) // anterior (antecessor) eh filho esquerdo de seu pai
+    {
+        anterior->pai->esquerda = anterior->esquerda;
+    }
+    else // anterior (sucessor) eh filho direito de seu pai
+    {
+        anterior->pai->direita = anterior->esquerda;
+    }
+    if(anterior->esquerda != NULL)
+    {
+        anterior->esquerda->pai = anterior->pai;
+    }
+    return anterior;
 }
